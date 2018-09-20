@@ -49,27 +49,40 @@
   (if (empty? list)
       0
       (+ 1 (list-length (rest list)))))
-
 (define (element-count lst c t)
   (cond
     [(empty? lst) 0]
     [(= (first lst) t) (+ 1 (element-count (rest list) c t))]))
 
+;(define (sieve-with div lst)
+;  (define c (list-length lst))
+;         (sort (flatten (map (lambda (div) (drop-divisible div lst))
+;              div)) <))
+
+(foldl (lambda (a b result) (* result (- a b))) 1 '(1 2 3) '(4 5 6))
+
+(define (r div lst)
+  (foldl cons div lst))
+
 (define (sieve-with div lst)
-  (define c (list-length lst))
-         (sort (flatten (map (lambda (div) (drop-divisible div lst))
-              div)) <))
+  (foldl (lambda (div lst) (drop-divisible div lst)) div lst))
+
+;(define (sieve-with div lst)
+;  (filter (not (null? (drop-divisible (first div) lst))) (rest div)))
 
 ;(define (sieve-with div lst)
 ;  (define c lst)
 ;         (remove-duplicates (remove-non-duplicates (sort (flatten (map (lambda (div) (drop-divisible div c))
 ;              div)) <))))
 
+(sieve-with '(2 3) (list 15 16))
 (sieve-with '(2 3 5) (list 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16))
-
+(sieve-with '(2 3 5 7) '(1 2 3 4 5 6 7 8 9 10 14 20 21))
 (module+ test
   (check-equal? (sieve-with '(2 3) (list 2 3 4 5 6 7 8 9 10)) (list 2 3 5 7)))
-
+foldl
 (module+ test
   (check-equal? (sieve-with '(2 3 5) (list 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)) (list 2 3 5 7 11 13)))
+
+(foldr (lambda (v l) (cons (add1 v) l)) '() '(1 2 3 4))
 
