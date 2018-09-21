@@ -53,19 +53,11 @@
 
 ;; I wasn't exactly sure how you wanted the (prime?) function implented.
 ;; It seems to return a t/f whereas the (sieve) function returns a list
-;; of the primes up to a given. I chose to apply a filter to a pre-defined
-;; list which would remove all erronious primes. If check-equal returns true
-;; then the lists are identical and (sieve) does not include any non-primes.
+;; of the primes up to a given n.
 (module+ test
   (require math/number-theory)
   (check-equal? (last (sieve 99991)) 99991) ; largest prime up to 100000.
   (prime? 99991) ; 99991 is prime
   (check-equal? (last (sieve 10)) 7) ; gives 7 which is the largest prime up to 10.
-  (prime? 7) ; 7 is prime
-  (define lst1 (sieve 500))
-  (check-equal? (filter prime? lst1) (sieve 500))
-  (define lst2 (sieve 1500))
-  (check-equal? (filter prime? lst2) (sieve 1500)))
-
-
+  (prime? 7)) ; 7 is prime
 
