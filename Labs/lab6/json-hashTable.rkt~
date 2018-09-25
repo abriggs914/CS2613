@@ -1,0 +1,22 @@
+#lang racket
+(require explorer)
+(require json)
+
+(define (read-json-file file-name)
+      (with-input-from-file file-name read-json))
+
+(define (visualize-json-file file-name)
+      (explore (read-json-file file-name)))
+
+(define (collect-status file)
+  (define x 100)
+  (define y 50)
+  (- x y))
+
+
+(visualize-json-file "errors.json")
+
+(module+ test
+      (require rackunit)
+      (check-equal? (collect-status "errors.json") '("403" "422" "500")))
+

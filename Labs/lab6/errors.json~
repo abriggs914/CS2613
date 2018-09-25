@@ -1,0 +1,8 @@
+(require explorer)
+(require json)
+
+(define (read-json-file file-name)
+  (with-input-from-file file-name read-json))
+
+(define (visualize-json-file file-name)
+  (explore (read-json-file file-name)))

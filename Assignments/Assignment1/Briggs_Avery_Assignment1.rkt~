@@ -30,9 +30,6 @@
 ;; by any of the divisors (don't enter 0 or 1).
 (define (sieve-with div lst)
   (foldl (lambda (div lst) (drop-divisible div lst)) lst div))
-#((define (sieve-with divisors canididates)
-foldl drop-divisible candidates divisors)
-)
 
 ;; Test for sieve-with
 (module+ test
