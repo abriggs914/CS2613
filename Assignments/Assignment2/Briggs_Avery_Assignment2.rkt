@@ -21,12 +21,17 @@
   #:transparent)
 
 (define (rfc2822->date dateIn)
-  (string->date dateIn "~a, ~d ~b ~Y ~H:~M:~S ~z"))
+  (string->date dateIn "~a, ~d ~b ~Y ~H:~M:~S ~z")
+  (date? dateIn))
+
 
 date-time-zone-offset
+
 (define (rfc2822<? date1 date2)
-  (struct date (date1))
-  (if (< date1-year date2) #f #t))
+  ;(define date1s (foldl (lambda (date1) (rfc2822->date date1)) date1))
+  ;(define date2s (foldl (lambda (date2) (rfc2822->date date2)) date2))
+  (last date1)
+  (date? (first date1)))
 
 
 (string->date "Tue, 26 Oct 2010 15:11:06 +0200" "~a, ~d ~b ~Y ~H:~M:~S ~z")
@@ -50,7 +55,22 @@ date-time-zone-offset
   (check-false (rfc2822<? "Tue, 26 Oct 2010 15:11:06 +0200" "Tue, 26 Oct 2010 15:11:06 +0200"))
   (check-false (rfc2822<? "Sun, 10 Sep 2017 13:16:19 +0200" "Tue, 26 Oct 2010 15:11:06 +0200")))
 )
+(define test-dates
+        '("Sun, 10 Sep 2017 09:48:44 +0200"
+          "Wed, 13 Sep 2017 17:51:05 +0000"
+          "Sun, 10 Sep 2017 13:16:19 +0200"
+          "Tue, 17 Nov 2009 18:21:38 -0500"
+          "Wed, 13 Sep 2017 10:40:47 -0700"
+          "Thu, 14 Sep 2017 12:03:35 -0700"
+          "Wed, 18 Nov 2009 02:22:12 -0800"
+          "Sat, 09 Sep 2017 13:40:18 -0700"
+          "Tue, 26 Oct 2010 15:11:06 +0200"
+          "Tue, 17 Nov 2009 18:04:31 -0800"
+          "Mon, 17 Oct 2011 04:15:12 +0000"
+          "Sun, 16 Oct 2011 23:12:02 -0500"
+          "Mon, 11 Sep 2017 14:41:12 +0100"))
 
+#(
 (module+ test
   (define test-dates
         '("Sun, 10 Sep 2017 09:48:44 +0200"
@@ -80,4 +100,4 @@ date-time-zone-offset
            "Wed, 13 Sep 2017 10:40:47 -0700"
            "Wed, 13 Sep 2017 17:51:05 +0000"
            "Thu, 14 Sep 2017 12:03:35 -0700"))
-  (check-equal? (sort (rfc2822<? test-dates test-dates) <) sorted-dates))
+(check-equal? (sort (rfc2822<? test-dates test-dates) <) sorted-dates)))
