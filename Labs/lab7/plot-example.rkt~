@@ -1,3 +1,0 @@
-#lang racket
-(require "calculus.rkt")
-(require plot)
