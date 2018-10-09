@@ -15,5 +15,3 @@
       (require rackunit)
       (check-equal? (Let^ ([x 5] [y (- x 3)]) (+ y y)) 4)
       (check-equal? (Let^ ([x 5] [y (- x 3)] [y x]) (* y y)) 25))
-
-(let* ([x 3][y (* x x)]) (- y x))

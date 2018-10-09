@@ -6,6 +6,12 @@
 
 (define (fsub f g)
   (lambda (x) (- (f x) (g x))))
+
+;;Function is equivalent to fsub except lambda is written long-hand
+(define (fsub3 f g)
+  (define (new-func x)
+    (- (f x) (g x)))
+  new-func)
   
   (module+ test
     (require rackunit)
@@ -23,6 +29,18 @@
   (lambda (x) (deriv f x)))
 
 (plot (function (fsub (fderiv sin) cos) -2pi 2pi))
+
+;;(define (function (fsub (fderiv sin ) cos) -2pi 2pi))
+;; function is just a non-lambda representation of binop->fbinop
+(define (binop->fbinop1 op)
+  (define(new-op f g)
+    (define (new-func x)
+      (op (f x) (g x)))
+    new-func)
+  new-op)
+
+;;function appends a given string to itself
+(define mystery ((binop->fbinop1 string-append) identity identity))
 
 (define (binop->fbinop op)
   (lambda (f g)

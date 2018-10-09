@@ -32,6 +32,5 @@
   (module+ test
     (check-equal? (sort (collect-status "errors.json") string<?)
                   (sort (collect-status2 "errors.json") string<?)))
-(collect-status2 "errors.json")
 
 

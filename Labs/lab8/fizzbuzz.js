@@ -1,6 +1,6 @@
 let n = 0;
 let msg;
-while(n < 100){
+while(n <= 100){
     msg = "";
     if(n % 3 == 0 && n != 0){
         msg += "Fizz";
