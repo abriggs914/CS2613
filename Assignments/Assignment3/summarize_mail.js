@@ -5,23 +5,33 @@ let data = null;
 let lst = null;
 
 function summarize_mail(filename){
-  data = null;
-  lst = null;
-if (data===null)
+    data = null;
+    lst = null;
+    if (data===null){}
     //data=read_json_file("ancestry.json"); //for ancestry.spec.js tests
-    data=flatten(read_json_file(filename)); //for shuffle tests
-// simple linear scan
-console.log("data: " + data + ",\narguments.length: " + arguments.length);
-for(let i = 1; i < arguments.length; i++){
-  console.log("arguments[i]: " + arguments[i] + ", i: " + i);
-  for(let j = 0; j < data.length; j++){
-    console.log("data[j].arguments[i]: " + data[j].arguments[i] + ", j: " + j);
-      if(data[j].arguments[i] !== null){
-        lst.concat(data[j].arguments[i]); // return data if found
+        data=flatten(read_json_file(filename)); //for shuffle tests
+        if(arguments.length <= 1){
+          console.log("No arguments given.");
+          return data;
+        }
+      // simple linear scan
+      console.log("\tflatten(data): " + data + ",\n\targuments.length: " + arguments.length);
+      for(var k = 0; k < arguments.length; k++){
+        console.log("k: " + k + " arguments.length: " + arguments.length + ", arguments[k]: " + arguments[k]);
       }
-  }
-}
-return lst;
+      for(var k = 0; k < data.length; k++){
+        console.log("k: " + k + " data.length: " + data.length + ", data[k].id: " + data[k].arguments[1]);
+      }
+      for(let i = 0; i < data.length; i++){
+          for(let j = 1; j < arguments.length; j++){
+              //console.log("data[j].arguments[i]: " + data[i].arguments[j] + ", j: " + j);
+              if(data[i].arguments[j] !== null){
+                  lst.concat(data[i].arguments[j]); // return data if found
+              }
+          }
+      }
+    }
+    return lst;
     //read_json_file("example1.json");
 }
 exports.summarize_mail = summarize_mail;
