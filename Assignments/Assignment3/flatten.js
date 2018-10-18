@@ -2,10 +2,8 @@
     //return (array.reduce(function(acc, element) {return acc.concat(element);}, []).split(","));
     return [].concat.apply([], array);
 }*/
-function flatten(array){
-    return array.reduce(function (flat, rst){ // flat is accumulating
-      return flat.concat(Array.isArray(rst)? flatten(rst) : rst); // return lst if no
-    }, []);                                                        //nested arrays left
+function flatten(arr){
+    return arr.reduce(function (acc, rst) {return acc.concat(((Array.isArray(rst))? flatten(rst) : rst));}, []);                                                        //nested arrays left
   }
 
 exports.flatten = flatten;
