@@ -28,9 +28,9 @@
        (sort (census "aardvark" "dingo" "buffalo" "buffalo" "bear") #:key car string<?)
        '(("aardvark" . 1) ("bear" . 1) ("buffalo" . 2) ("dingo" . 1))))
 
-;(require explorer)
+(require explorer)
 
 (define a-list
       (list 1 (list 'foo "hello")
             (hash 'apple "red" 'sky "blue" 'violets "purple")))
-;(explore a-list)
+(explore a-list)
