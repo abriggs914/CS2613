@@ -24,8 +24,13 @@ class Expr {
     return res;
   }
 }
-console.log("hey there");
+//console.log("hey there");
 let six_plus_nine = new Expr('+', 6, 9);
 let six_times_nine = new Expr('*', 6, 9);
 let hard = new Expr('+', six_times_nine, six_plus_nine);
 let hard2 = new Expr('*', six_times_nine, hard);
+console.log("six_plus_nine: " + six_plus_nine);
+console.log("six_times_nine: " + six_times_nine);
+console.log("hard: " + hard);
+console.log("hard2: " + hard2);
+exports.Expr = Expr;

@@ -1,4 +1,4 @@
-let Expr=require("../expr.js").Expr;
+let Expr=require("../Expr.js").Expr;
 
 describe("expr",
          function() {
