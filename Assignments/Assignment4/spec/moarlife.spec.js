@@ -74,7 +74,7 @@ describe("World",
 
             // addition
             it("eat, return true", function () {
-                spyOn(bob,"act").and.returnValue({type: "eat", direction: undefined});
+                spyOn(bob,"act").and.returnValue({type: "move", direction: undefined});
                 let before = bob.energy;
                 valley.letAct(bob, src);
 
