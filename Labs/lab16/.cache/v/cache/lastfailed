@@ -1,0 +1,6 @@
+{
+  "test_rpn.py::test_a": true,
+  "test_rpn.py::test_b": true,
+  "test_rpn.py::test_c": true,
+  "test_rpn.py::test_list_quit": true
+}
