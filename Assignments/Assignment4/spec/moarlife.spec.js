@@ -72,15 +72,19 @@ describe("World",
                 expect(bob.energy).toEqual(before-0.2);
             });
 
-            // addition
+            //addition
             it("eat, return true", function () {
-                spyOn(bob,"act").and.returnValue({type: "move", direction: undefined});
-                let before = bob.energy;
-                valley.letAct(bob, src);
+                console.log("eat return true");
+                //spyOn(bob,"act").and.returnValue({type: "eat", direction: undefined});
+                //let before = bob.energy;
+                //valley.letAct(bob, src);
+                console.log("typeof(bob): " + typeof(bob));
+                bob.act(bob, plantsrc, "eat");
+                console.log("bob.energy: " + bob.energy);
 
-                expect(bob.energy).toEqual(before);
+                expect(bob.energy).toEqual(20.2);
             });
-            // addition
+            //addition
 
             it("grow", function () {
                 spyOn(plant,"act").and.returnValue({type: "grow", direction: "s"});

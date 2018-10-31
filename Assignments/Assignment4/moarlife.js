@@ -23,7 +23,9 @@ actionTypes.move = function(critter, vector, action) {
 
 actionTypes.eat = function(critter, vector, action) {
     let dest = this.checkDestination(action, vector);
+    console.log("dest: " +dest + " dest.x: " + dest.x +" dest.y: " +dest.y);
     let atDest = dest != null && this.grid.get(dest);
+    console.log(" this.grid.get(dest): " +this.grid.get(dest));
     if (!atDest || atDest.energy == null)
         return false;
     console.log("atDest.energy: " + atDest.energy);
