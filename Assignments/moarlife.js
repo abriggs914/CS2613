@@ -23,12 +23,60 @@ actionTypes.move = function(critter, vector, action) {
 
 actionTypes.eat = function(critter, vector, action) {
     let dest = this.checkDestination(action, vector);
-    console.log("dest: " +dest + " dest.x: " + dest.x +" dest.y: " +dest.y);
-    let atDest = dest != null && this.grid.get(dest);
-    console.log(" this.grid.get(dest): " +this.grid.get(dest));
+    let bool = dest != null;
+    let atDest = bool && this.grid.get(dest);
+    console.log("bool: " + bool);
+    console.log("atDest: " + atDest);
+    console.log("this.grid.get(dest): " +this.grid.get(dest));
+    console.log("\ndest == vector");
+    var propValue;
+    for(var propName in dest){
+      propValue = dest[propName];
+      console.log(propName,propValue);
+    }
+    console.log("\natDest");
+    for(var propName in atDest){
+      propValue = atDest[propName];
+      console.log(propName,propValue);
+    }
+    console.log("\ncritter");
+    for(var propName in critter){
+      propValue = critter[propName];
+      console.log(propName,propValue);
+    }
+    console.log("\nvector");
+    for(var propName in vector){
+      propValue = vector[propName];
+      console.log(propName,propValue);
+    }
+    console.log("\naction");
+    for(var propName in action){
+      propValue = action[propName];
+      console.log(propName,propValue);
+    }
+    console.log("\nthis.grid.get(dest)");
+    for(var propName in this.grid.get(dest)){
+      propValue = this.grid.get(dest)[propName];
+      console.log(propName,propValue);
+    }
+    console.log("!atDest: " + atDest);
+    console.log("\n!atDest");
+    /*for(var propName in !atDest){
+      propValue = !atDest[propName];
+      console.log(propName,propValue);
+    }*/
+    if(!atDest){
+      for(let i = 0; i < 10; i++){
+        console.log("BAMBOOZELED");
+      }
+    }else {
+      for(let i = 0; i < 10; i++){
+        console.log("FOUND YOU MOTHERFUCKER");
+      }
+      console.log("\natDest.energy: " + atDest.energy);
+    }
     if (!atDest || atDest.energy == null)
         return false;
-    console.log("atDest.energy: " + atDest.energy);
     critter.energy += atDest.energy;
     this.grid.set(dest, null);
     return true;
@@ -69,13 +117,14 @@ class  Plant {
     constructor() {
         this.energy = 3 + Math.random() * 4;
     }
-    
+
     act(view) {
         if (this.energy > 15) {
             let space = view.find(" ");
             if (space)
                 return {type: "reproduce", direction: space};
         }
+        //console.log("this.energy: " + this.energy);
         if (this.energy < 20)
             return {type: "grow"};
     }

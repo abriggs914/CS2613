@@ -1,4 +1,5 @@
 let life=require ("../moarlife.js");
+let life2=require ("../life.js");
 
 let Vector = life.Vector;
 
@@ -38,7 +39,6 @@ describe("World",
             plant = valley.grid.get(plantsrc);
 
         });
-
         it("roundtrip",
             function() {
                 let rows = valley.toString().split("\n");
@@ -74,15 +74,13 @@ describe("World",
 
             //addition
             it("eat, return true", function () {
-                console.log("eat return true");
-                //spyOn(bob,"act").and.returnValue({type: "eat", direction: undefined});
-                //let before = bob.energy;
-                //valley.letAct(bob, src);
-                console.log("typeof(bob): " + typeof(bob));
-                bob.act(bob, plantsrc, "eat");
-                console.log("bob.energy: " + bob.energy);
-
-                expect(bob.energy).toEqual(20.2);
+              let plantsrc = new Vector(2,10);
+              //let world = new life2.World(plan, {"#": life.Wall, "o": life.BouncingCritter});
+              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+              spyOn(bob,"act").and.returnValue({type: "eat", direction: "se"});
+              let before = bob.energy;
+              valley.letAct(bob, plantsrc);
+              expect(bob.energy).toEqual(before+1);
             });
             //addition
 
@@ -93,7 +91,7 @@ describe("World",
 
                 expect(plant.energy).toEqual(before+0.5);
             });
-                 
+
             it("reproduce attempt, return false", function () {
                 spyOn(bob,"act").and.returnValue({type: "reproduce", direction: "s"});
                 valley.letAct(bob, src);
@@ -125,7 +123,6 @@ describe("World",
                 expect(valley.grid.get(src)).toEqual(null);
             });
         });
-
         describe("act", function() {
             let view = null;
             beforeEach(function () {
