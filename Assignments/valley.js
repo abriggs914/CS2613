@@ -2,7 +2,7 @@ var life=require("./moarlife.js");
 
 var valley = new life.LifelikeWorld(
     ["############################",
-        "#####                 ######",
+        "#####       &         ######",
         "##   ***                **##",
         "#   *##**         **  O  *##",
         "#    ***     O    ##**    *#",
@@ -15,7 +15,8 @@ var valley = new life.LifelikeWorld(
         "############################"],
     {"#": life.Wall,
         "O": life.PlantEater,
-        "*": life.Plant}
+        "*": life.Plant,
+        "&": life.ExplodingBunnyRabbit}
 );
 
 function loop () {

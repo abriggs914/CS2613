@@ -1,11 +1,10 @@
 let life=require ("../moarlife.js");
-let life2=require ("../life.js");
 
 let Vector = life.Vector;
 
 let plan= ["############################",
-    "#####                 ######",
-    "##   ***                **##",
+    "#####          &      ######",
+    "##   ***       &        **##",
     "#   *##**         **  O  *##",
     "#    ***     O    ##**    *#",
     "#       O         ##***    #",
@@ -26,6 +25,7 @@ describe("World",
         let bob=null;
         let bunny=null;
         let plant=null;
+
         beforeEach(function() {
             valley = new life.LifelikeWorld(plan,
                 {"#": life.Wall,
@@ -34,7 +34,18 @@ describe("World",
                     "*": life.Plant});
 
             bob=valley.grid.get(src);
+            //bunny = valley.grid.get(new Vector(2,15));
+            //bunny = valley.grid.get(new Vector(2,10));
             bunny = valley.grid.get(new Vector(15,2));
+            // console.log("\nBOB:");
+            // var propValue;
+            // for(var propName in bob){
+            //   propValue = bob[propName];
+            //   console.log(propName,propValue);
+            // }
+            // console.log("\n");
+             //console.log("bunny: " + bunny + ", bob: " + bob + ", plantsrc: " + plantsrc);
+            // console.log("bob: " + bob);
 
             plant = valley.grid.get(plantsrc);
 
@@ -72,17 +83,19 @@ describe("World",
                 expect(bob.energy).toEqual(before-0.2);
             });
 
-            //addition
+            // addition
+            // When executing nyc jasmine
+            // the line coverage will report that the branch in moarlife(line: 128)
+            // is taken every time. Since there are no other conditions for it to branch
+            // I think that it is okay.
             it("eat, return true", function () {
-              let plantsrc = new Vector(2,10);
-              //let world = new life2.World(plan, {"#": life.Wall, "o": life.BouncingCritter});
               spyOn(valley,"checkDestination").and.returnValue(plantsrc);
               spyOn(bob,"act").and.returnValue({type: "eat", direction: "se"});
-              let before = bob.energy;
+              bob.energy = 12.0;
               valley.letAct(bob, plantsrc);
-              expect(bob.energy).toEqual(before+1);
+              expect(bob.energy).toEqual(valley.grid.get(src).energy);
             });
-            //addition
+            // addition
 
             it("grow", function () {
                 spyOn(plant,"act").and.returnValue({type: "grow", direction: "s"});
@@ -123,6 +136,96 @@ describe("World",
                 expect(valley.grid.get(src)).toEqual(null);
             });
         });
+
+        //addition
+        describe("letAct ExplodingBunnyRabbit", function () {
+            it("move EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,3))).toEqual(bunny);
+            });
+
+            it("move, low energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
+                bunny.energy=0.5;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(dest)).toEqual(null);
+            });
+
+            it("die EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "die", direction: "s"});
+                spyOn(Math,"random").and.returnValue(0);
+                bunny.energy=55.1;
+                expect(bunny.act).toHaveBeenCalled();
+                console.log("bunny: "+bunny+", bunny.constructor.name: " + bunny.constructor.name);
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual("#");
+            });
+
+            it("eat, return false EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "eat", direction: "s"});
+                let before = bunny.energy;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(bunny.energy).toEqual(before-0.2);
+            });
+
+            // addition
+            it("eat, return true EXPBRBT", function () {
+              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+              // console.log("bunny: " + bunny);
+              // var propValue;
+              // for(var propName in bunny){
+              //   propValue = bunny[propName];
+              //   console.log(propName,propValue);
+              // }
+              spyOn(bunny,"act").and.returnValue({type: "eat", direction: "se"});
+              bunny.energy = 12.0;
+              valley.letAct(bunny, plantsrc);
+              expect(bunny.energy).toEqual(valley.grid.get(new Vector(15,2)).energy);
+            });
+            // addition
+
+            it("reproduce attempt, return false EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "reproduce", direction: "s"});
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(bunny);
+            });
+
+            it("reproduce attempt, true EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "reproduce", direction: "s"});
+                bunny.energy=1000;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(bunny);
+            });
+
+            it("use energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "unhandled", direction: undefined});
+                bunny.energy=1;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(bunny.energy).toEqual(0.8);
+            });
+
+            it("run out of energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "unhandled", direction: undefined});
+                bunny.energy=0.1;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(null);
+            });
+
+            // it("final check", function(){
+            //   expect(bunny.act()).toHaveBeenCalled();
+            // });
+        });
+        //addition
+
         describe("act", function() {
             let view = null;
             beforeEach(function () {
