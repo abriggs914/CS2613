@@ -45,11 +45,11 @@ actionTypes.reproduce = function(critter, vector, action) {
 };
 
 actionTypes.die = function(critter, vector, action) {
-  critter.originChar = "#";
-  let newWall = life.World.elementFromChar(this.legend, critter.originChar);
-  this.grid.set(vector, newWall);
-  return true;
-}
+    critter.originChar = "#";
+    let newWall = life.World.elementFromChar(this.legend, critter.originChar);
+    this.grid.set(vector, newWall);
+    return true;
+};
 
 class LifelikeWorld extends life.World {
     constructor(map,legend){
@@ -90,7 +90,7 @@ class  PlantEater{
         this.energy = 20;
     }
 
-     act(view) {
+    act(view) {
         let space = view.find(" ");
         if (this.energy > 60 && space)
             return {type: "reproduce", direction: space};
@@ -111,10 +111,10 @@ class ExplodingBunnyRabbit extends PlantEater{
     act(view) {
         let space = view.find(" ");
         if(this.energy > 55){
-          let chance = Math.floor((Math.random() * 4) + 1);
-          if(chance == 1){
-            return {type: "die", direction: space};
-          }
+            let chance = Math.floor((Math.random() * 4) + 1);
+            if(chance == 1){
+                return {type: "die", direction: space};
+            }
         }
         if (this.energy > 60 && space)
             return {type: "reproduce", direction: space};
@@ -123,7 +123,7 @@ class ExplodingBunnyRabbit extends PlantEater{
             return {type: "eat", direction: plant};
         if (space)
             return {type: "move", direction: space};
-      }
+    }
 }
 //addition bottom
 

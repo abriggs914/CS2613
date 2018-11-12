@@ -38,6 +38,7 @@ describe("World",
             plant = valley.grid.get(plantsrc);
 
         });
+
         it("roundtrip",
             function() {
                 let rows = valley.toString().split("\n");
@@ -77,11 +78,12 @@ describe("World",
             // is taken every time. Since there are no other conditions for it to branch
             // I think that it is okay.
             it("eat, return true", function () {
-              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
-              spyOn(bob,"act").and.returnValue({type: "eat", direction: "se"});
-              bob.energy = 12.0;
-              valley.letAct(bob, plantsrc);
-              expect(bob.energy).toEqual(valley.grid.get(src).energy);
+                spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+                spyOn(bob,"act").and.returnValue({type: "eat", direction: "se"});
+                bob.energy = 12.0;
+                valley.letAct(bob, plantsrc);
+
+                expect(bob.energy).toEqual(valley.grid.get(src).energy);
             });
             // addition bottom
 
@@ -161,11 +163,12 @@ describe("World",
             });
 
             it("eat, return true EXPBRBT", function () {
-              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
-              spyOn(bunny,"act").and.returnValue({type: "eat", direction: "se"});
-              bunny.energy = 12.0;
-              valley.letAct(bunny, plantsrc);
-              expect(bunny.energy).toEqual(valley.grid.get(new Vector(15,2)).energy);
+                spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+                spyOn(bunny,"act").and.returnValue({type: "eat", direction: "se"});
+                bunny.energy = 12.0;
+                valley.letAct(bunny, plantsrc);
+
+                expect(bunny.energy).toEqual(valley.grid.get(new Vector(15,2)).energy);
             });
 
             it("reproduce attempt, return false EXPBRBT", function () {
@@ -273,45 +276,47 @@ describe("World",
                         expect(plant.act(view).type).toEqual("grow");
                     });
             });
-            //addition top
-            describe("ExplodingBunnyRabbit simple tests",
-                function() {
-                    beforeEach(function () {
-                        view=new life.View(valley, new Vector(15,2));
+        //addition top
+        describe("ExplodingBunnyRabbit simple tests",
+            function() {
+                beforeEach(function () {
+                    view=new life.View(valley, new Vector(15,2));
+                });
+
+                it("eat",
+                    function () {
+                        spyOn(view,"find").and.returnValue("*");
+
+                        expect(bunny.act(view).type).toEqual("eat");
                     });
 
-                    it("eat",
-                        function () {
-                            spyOn(view,"find").and.returnValue("*");
+                it("move",
+                    function () {
+                        expect(bunny.act(view).type).toEqual("move");
+                    });
 
-                            expect(bunny.act(view).type).toEqual("eat");
-                        });
+                it("can't move",
+                    function () {
+                        spyOn(view,"find").and.returnValue(null);
 
-                    it("move",
-                        function () {
-                            expect(bunny.act(view).type).toEqual("move");
-                        });
+                        expect(bunny.act(view)).toEqual(undefined);
+                    });
 
-                    it("can't move",
-                        function () {
-                            spyOn(view,"find").and.returnValue(null);
+                it("reproduce",
+                    function () {
+                        bunny.energy=61;
+                        spyOn(Math,"random").and.returnValue(1);
+                        spyOn(view,"find").and.returnValue(" ");
 
-                            expect(bunny.act(view)).toEqual(undefined);
-                        });
+                        expect(bunny.act(view).type).toEqual("reproduce");
+                    });
 
-                    it("reproduce",
-                        function () {
-                            bunny.energy=61;
-                            spyOn(Math,"random").and.returnValue(1);
-                            spyOn(view,"find").and.returnValue(" ");
-                            expect(bunny.act(view).type).toEqual("reproduce");
-                        });
+                it("die", function(){
+                    bunny.energy = 56;
+                    spyOn(Math,"random").and.returnValue(0);
 
-                      it("die", function(){
-                        bunny.energy = 56;
-                        spyOn(Math,"random").and.returnValue(0);
-                        expect(bunny.act(view).type).toEqual("die");
-                      });
+                    expect(bunny.act(view).type).toEqual("die");
                 });
-                //addition bottom
+            });
+        //addition bottom
     });
