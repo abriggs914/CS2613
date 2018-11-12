@@ -18,7 +18,6 @@ class Vector {
         this.y = y;
     }
     plus(other) {
-      //console.log("this.x: " + this.x + ", other.x: " + other.x + ", this.y: " + this.y + ", other.y: " + other.y);
         return new Vector(this.x + other.x, this.y + other.y);
     }
 };
@@ -36,7 +35,6 @@ class Grid {
     }
 
     get(vector) {
-      //console.log("vector.x: " + vector.x + " + this.width: " + this.width + " * vector.y: " + vector.y + " = " + (vector.x+this.width*vector.y));
         return this.space[vector.x + this.width * vector.y];
     }
 
@@ -127,9 +125,6 @@ class World {
             return null;
         var element = new legend[ch]();
         element.originChar = ch;
-        // if(ch == '&'){
-        //   console.log("originChar: " + ch);
-        // }
         return element;
     }
 

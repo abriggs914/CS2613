@@ -34,19 +34,7 @@ describe("World",
                     "*": life.Plant});
 
             bob=valley.grid.get(src);
-            //bunny = valley.grid.get(new Vector(2,15));
-            //bunny = valley.grid.get(new Vector(2,10));
             bunny = valley.grid.get(new Vector(15,2));
-            // console.log("\nBOB:");
-            // var propValue;
-            // for(var propName in bob){
-            //   propValue = bob[propName];
-            //   console.log(propName,propValue);
-            // }
-            // console.log("\n");
-             //console.log("bunny: " + bunny + ", bob: " + bob + ", plantsrc: " + plantsrc);
-            // console.log("bob: " + bob);
-
             plant = valley.grid.get(plantsrc);
 
         });
@@ -83,9 +71,9 @@ describe("World",
                 expect(bob.energy).toEqual(before-0.2);
             });
 
-            // addition
+            // addition top
             // When executing nyc jasmine
-            // the line coverage will report that the branch in moarlife(line: 128)
+            // the line coverage will report that the branch in moarlife(line: 84)
             // is taken every time. Since there are no other conditions for it to branch
             // I think that it is okay.
             it("eat, return true", function () {
@@ -95,7 +83,7 @@ describe("World",
               valley.letAct(bob, plantsrc);
               expect(bob.energy).toEqual(valley.grid.get(src).energy);
             });
-            // addition
+            // addition bottom
 
             it("grow", function () {
                 spyOn(plant,"act").and.returnValue({type: "grow", direction: "s"});
@@ -137,10 +125,11 @@ describe("World",
             });
         });
 
-        //addition
+        //addition top
         describe("letAct ExplodingBunnyRabbit", function () {
+
             it("move EXPBRBT", function () {
-                spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
+                var spy = spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
                 valley.letAct(bunny, new Vector(15,2));
 
                 expect(valley.grid.get(new Vector(15,3))).toEqual(bunny);
@@ -157,12 +146,10 @@ describe("World",
             it("die EXPBRBT", function () {
                 spyOn(bunny,"act").and.returnValue({type: "die", direction: "s"});
                 spyOn(Math,"random").and.returnValue(0);
-                bunny.energy=55.1;
-                expect(bunny.act).toHaveBeenCalled();
-                console.log("bunny: "+bunny+", bunny.constructor.name: " + bunny.constructor.name);
+                bunny.energy=56;
                 valley.letAct(bunny, new Vector(15,2));
 
-                expect(valley.grid.get(new Vector(15,2))).toEqual("#");
+                expect(valley.grid.get(new Vector(15,2)).originChar).toEqual("#");
             });
 
             it("eat, return false EXPBRBT", function () {
@@ -173,21 +160,13 @@ describe("World",
                 expect(bunny.energy).toEqual(before-0.2);
             });
 
-            // addition
             it("eat, return true EXPBRBT", function () {
               spyOn(valley,"checkDestination").and.returnValue(plantsrc);
-              // console.log("bunny: " + bunny);
-              // var propValue;
-              // for(var propName in bunny){
-              //   propValue = bunny[propName];
-              //   console.log(propName,propValue);
-              // }
               spyOn(bunny,"act").and.returnValue({type: "eat", direction: "se"});
               bunny.energy = 12.0;
               valley.letAct(bunny, plantsrc);
               expect(bunny.energy).toEqual(valley.grid.get(new Vector(15,2)).energy);
             });
-            // addition
 
             it("reproduce attempt, return false EXPBRBT", function () {
                 spyOn(bunny,"act").and.returnValue({type: "reproduce", direction: "s"});
@@ -219,12 +198,8 @@ describe("World",
 
                 expect(valley.grid.get(new Vector(15,2))).toEqual(null);
             });
-
-            // it("final check", function(){
-            //   expect(bunny.act()).toHaveBeenCalled();
-            // });
         });
-        //addition
+        //addition bottom
 
         describe("act", function() {
             let view = null;
@@ -298,4 +273,45 @@ describe("World",
                         expect(plant.act(view).type).toEqual("grow");
                     });
             });
+            //addition top
+            describe("ExplodingBunnyRabbit simple tests",
+                function() {
+                    beforeEach(function () {
+                        view=new life.View(valley, new Vector(15,2));
+                    });
+
+                    it("eat",
+                        function () {
+                            spyOn(view,"find").and.returnValue("*");
+
+                            expect(bunny.act(view).type).toEqual("eat");
+                        });
+
+                    it("move",
+                        function () {
+                            expect(bunny.act(view).type).toEqual("move");
+                        });
+
+                    it("can't move",
+                        function () {
+                            spyOn(view,"find").and.returnValue(null);
+
+                            expect(bunny.act(view)).toEqual(undefined);
+                        });
+
+                    it("reproduce",
+                        function () {
+                            bunny.energy=61;
+                            spyOn(Math,"random").and.returnValue(1);
+                            spyOn(view,"find").and.returnValue(" ");
+                            expect(bunny.act(view).type).toEqual("reproduce");
+                        });
+
+                      it("die", function(){
+                        bunny.energy = 56;
+                        spyOn(Math,"random").and.returnValue(0);
+                        expect(bunny.act(view).type).toEqual("die");
+                      });
+                });
+                //addition bottom
     });

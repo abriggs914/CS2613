@@ -23,12 +23,9 @@ actionTypes.move = function(critter, vector, action) {
 
 actionTypes.eat = function(critter, vector, action) {
     let dest = this.checkDestination(action, vector);
-    console.log("dest: " +dest + " dest.x: " + dest.x +" dest.y: " +dest.y);
     let atDest = dest != null && this.grid.get(dest);
-    console.log(" this.grid.get(dest): " +this.grid.get(dest));
     if (!atDest || atDest.energy == null)
         return false;
-    console.log("atDest.energy: " + atDest.energy);
     critter.energy += atDest.energy;
     this.grid.set(dest, null);
     return true;
@@ -46,6 +43,13 @@ actionTypes.reproduce = function(critter, vector, action) {
     this.grid.set(dest, baby);
     return true;
 };
+
+actionTypes.die = function(critter, vector, action) {
+  critter.originChar = "#";
+  let newWall = life.World.elementFromChar(this.legend, critter.originChar);
+  this.grid.set(vector, newWall);
+  return true;
+}
 
 class LifelikeWorld extends life.World {
     constructor(map,legend){
@@ -69,7 +73,7 @@ class  Plant {
     constructor() {
         this.energy = 3 + Math.random() * 4;
     }
-    
+
     act(view) {
         if (this.energy > 15) {
             let space = view.find(" ");
@@ -86,7 +90,7 @@ class  PlantEater{
         this.energy = 20;
     }
 
-    act(view) {
+     act(view) {
         let space = view.find(" ");
         if (this.energy > 60 && space)
             return {type: "reproduce", direction: space};
@@ -98,10 +102,36 @@ class  PlantEater{
     }
 }
 
+//addition top
+class ExplodingBunnyRabbit extends PlantEater{
+    constructor () {
+        super();
+    }
+
+    act(view) {
+        let space = view.find(" ");
+        if(this.energy > 55){
+          let chance = Math.floor((Math.random() * 4) + 1);
+          if(chance == 1){
+            return {type: "die", direction: space};
+          }
+        }
+        if (this.energy > 60 && space)
+            return {type: "reproduce", direction: space};
+        let plant = view.find("*");
+        if (plant)
+            return {type: "eat", direction: plant};
+        if (space)
+            return {type: "move", direction: space};
+      }
+}
+//addition bottom
+
 exports.LifelikeWorld=LifelikeWorld;
 exports.BouncingCritter=life.BouncingCritter;
 exports.Wall=life.Wall;
 exports.PlantEater = PlantEater;
+exports.ExplodingBunnyRabbit=ExplodingBunnyRabbit;
 exports.Plant = Plant;
 exports.Vector = life.Vector;
 exports.View = life.View;

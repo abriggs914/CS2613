@@ -24,57 +24,6 @@ actionTypes.move = function(critter, vector, action) {
 actionTypes.eat = function(critter, vector, action) {
     let dest = this.checkDestination(action, vector);
     let atDest = dest != null && this.grid.get(dest);
-    // console.log("bool: " + bool);
-    // console.log("atDest: " + atDest);
-    // console.log("this.grid.get(dest): " +this.grid.get(dest));
-    // console.log("\ndest == vector");
-    // var propValue;
-    // for(var propName in dest){
-    //   propValue = dest[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("\natDest");
-    // for(var propName in atDest){
-    //   propValue = atDest[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("\ncritter");
-    // for(var propName in critter){
-    //   propValue = critter[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("\nvector");
-    // for(var propName in vector){
-    //   propValue = vector[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("\naction");
-    // for(var propName in action){
-    //   propValue = action[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("\nthis.grid.get(dest)");
-    // for(var propName in this.grid.get(dest)){
-    //   propValue = this.grid.get(dest)[propName];
-    //   console.log(propName,propValue);
-    // }
-    // console.log("!atDest: " + atDest);
-    // console.log("\n!atDest");
-    // if(!atDest){ // atDest == false
-    //   for(let i = 0; i < 3; i++){
-    //     console.log("BAMBOOZELED");
-    //   }
-    // }else {
-    //   for(let i = 0; i < 3; i++){
-    //     console.log("FOUND YOU MOTHERFUCKER");
-    //   }
-    //   console.log("\natDest.energy: " + atDest.energy + "\n!atDest:");
-    //   for(var propName in !atDest){
-    //     propValue = !atDest[propName];
-    //     console.log(propName,propValue);
-    //   }
-    //   console.log("\n");
-    // }
     if (!atDest || atDest.energy == null)
         return false;
     critter.energy += atDest.energy;
@@ -95,9 +44,12 @@ actionTypes.reproduce = function(critter, vector, action) {
     return true;
 };
 
-// actionTypes.die = function(critter, vector) {
-//   return true;
-// }
+actionTypes.die = function(critter, vector, action) {
+  critter.originChar = "#";
+  let newWall = life.World.elementFromChar(this.legend, critter.originChar);
+  this.grid.set(vector, newWall);
+  return true;
+}
 
 class LifelikeWorld extends life.World {
     constructor(map,legend){
@@ -138,8 +90,7 @@ class  PlantEater{
         this.energy = 20;
     }
 
-    act(view) {
-      console.log("PlantEater acting");
+     act(view) {
         let space = view.find(" ");
         if (this.energy > 60 && space)
             return {type: "reproduce", direction: space};
@@ -151,33 +102,30 @@ class  PlantEater{
     }
 }
 
+//addition top
 class ExplodingBunnyRabbit extends PlantEater{
     constructor () {
-      //console.log("typeof(EXPBRBT): " + typeof(ExplodingBunnyRabbit));
-        super(); // object is not created I guess.
-        this.rabbit = true;
-        //this.energy = 20;
+        super();
     }
 
-    act(view) { // function is not called
-      console.log("ExplodingBunnyRabbit acting");
-        // let space = view.find(" ");
-        // if(this.energy > 55){
-        //   let chance = Math.floor((Math.random() * 4) + 1);
-        //   if(chance == 1){
-        //     //this.grid.set(vector, "#")
-        //     return {type: "die", direction: space}
-        //   }
-        // }
-        // if (this.energy > 60 && space)
-        //     return {type: "reproduce", direction: space};
-        // let plant = view.find("*");
-        // if (plant)
-        //     return {type: "eat", direction: plant};
-        // if (space)
-        //     return {type: "move", direction: space};
+    act(view) {
+        let space = view.find(" ");
+        if(this.energy > 55){
+          let chance = Math.floor((Math.random() * 4) + 1);
+          if(chance == 1){
+            return {type: "die", direction: space};
+          }
+        }
+        if (this.energy > 60 && space)
+            return {type: "reproduce", direction: space};
+        let plant = view.find("*");
+        if (plant)
+            return {type: "eat", direction: plant};
+        if (space)
+            return {type: "move", direction: space};
       }
 }
+//addition bottom
 
 exports.LifelikeWorld=LifelikeWorld;
 exports.BouncingCritter=life.BouncingCritter;

@@ -3,8 +3,8 @@ let life=require ("../moarlife.js");
 let Vector = life.Vector;
 
 let plan= ["############################",
-    "#####                 ######",
-    "##   ***                **##",
+    "#####          &      ######",
+    "##   ***       &        **##",
     "#   *##**         **  O  *##",
     "#    ***     O    ##**    *#",
     "#       O         ##***    #",
@@ -25,6 +25,7 @@ describe("World",
         let bob=null;
         let bunny=null;
         let plant=null;
+
         beforeEach(function() {
             valley = new life.LifelikeWorld(plan,
                 {"#": life.Wall,
@@ -34,11 +35,9 @@ describe("World",
 
             bob=valley.grid.get(src);
             bunny = valley.grid.get(new Vector(15,2));
-
             plant = valley.grid.get(plantsrc);
 
         });
-
         it("roundtrip",
             function() {
                 let rows = valley.toString().split("\n");
@@ -72,19 +71,19 @@ describe("World",
                 expect(bob.energy).toEqual(before-0.2);
             });
 
-            //addition
+            // addition top
+            // When executing nyc jasmine
+            // the line coverage will report that the branch in moarlife(line: 84)
+            // is taken every time. Since there are no other conditions for it to branch
+            // I think that it is okay.
             it("eat, return true", function () {
-                console.log("eat return true");
-                //spyOn(bob,"act").and.returnValue({type: "eat", direction: undefined});
-                //let before = bob.energy;
-                //valley.letAct(bob, src);
-                console.log("typeof(bob): " + typeof(bob));
-                bob.act(bob, plantsrc, "eat");
-                console.log("bob.energy: " + bob.energy);
-
-                expect(bob.energy).toEqual(20.2);
+              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+              spyOn(bob,"act").and.returnValue({type: "eat", direction: "se"});
+              bob.energy = 12.0;
+              valley.letAct(bob, plantsrc);
+              expect(bob.energy).toEqual(valley.grid.get(src).energy);
             });
-            //addition
+            // addition bottom
 
             it("grow", function () {
                 spyOn(plant,"act").and.returnValue({type: "grow", direction: "s"});
@@ -93,7 +92,7 @@ describe("World",
 
                 expect(plant.energy).toEqual(before+0.5);
             });
-                 
+
             it("reproduce attempt, return false", function () {
                 spyOn(bob,"act").and.returnValue({type: "reproduce", direction: "s"});
                 valley.letAct(bob, src);
@@ -125,6 +124,82 @@ describe("World",
                 expect(valley.grid.get(src)).toEqual(null);
             });
         });
+
+        //addition top
+        describe("letAct ExplodingBunnyRabbit", function () {
+
+            it("move EXPBRBT", function () {
+                var spy = spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,3))).toEqual(bunny);
+            });
+
+            it("move, low energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "move", direction: "s"});
+                bunny.energy=0.5;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(dest)).toEqual(null);
+            });
+
+            it("die EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "die", direction: "s"});
+                spyOn(Math,"random").and.returnValue(0);
+                bunny.energy=56;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2)).originChar).toEqual("#");
+            });
+
+            it("eat, return false EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "eat", direction: "s"});
+                let before = bunny.energy;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(bunny.energy).toEqual(before-0.2);
+            });
+
+            it("eat, return true EXPBRBT", function () {
+              spyOn(valley,"checkDestination").and.returnValue(plantsrc);
+              spyOn(bunny,"act").and.returnValue({type: "eat", direction: "se"});
+              bunny.energy = 12.0;
+              valley.letAct(bunny, plantsrc);
+              expect(bunny.energy).toEqual(valley.grid.get(new Vector(15,2)).energy);
+            });
+
+            it("reproduce attempt, return false EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "reproduce", direction: "s"});
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(bunny);
+            });
+
+            it("reproduce attempt, true EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "reproduce", direction: "s"});
+                bunny.energy=1000;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(bunny);
+            });
+
+            it("use energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "unhandled", direction: undefined});
+                bunny.energy=1;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(bunny.energy).toEqual(0.8);
+            });
+
+            it("run out of energy EXPBRBT", function () {
+                spyOn(bunny,"act").and.returnValue({type: "unhandled", direction: undefined});
+                bunny.energy=0.1;
+                valley.letAct(bunny, new Vector(15,2));
+
+                expect(valley.grid.get(new Vector(15,2))).toEqual(null);
+            });
+        });
+        //addition bottom
 
         describe("act", function() {
             let view = null;
@@ -198,4 +273,45 @@ describe("World",
                         expect(plant.act(view).type).toEqual("grow");
                     });
             });
+            //addition top
+            describe("ExplodingBunnyRabbit simple tests",
+                function() {
+                    beforeEach(function () {
+                        view=new life.View(valley, new Vector(15,2));
+                    });
+
+                    it("eat",
+                        function () {
+                            spyOn(view,"find").and.returnValue("*");
+
+                            expect(bunny.act(view).type).toEqual("eat");
+                        });
+
+                    it("move",
+                        function () {
+                            expect(bunny.act(view).type).toEqual("move");
+                        });
+
+                    it("can't move",
+                        function () {
+                            spyOn(view,"find").and.returnValue(null);
+
+                            expect(bunny.act(view)).toEqual(undefined);
+                        });
+
+                    it("reproduce",
+                        function () {
+                            bunny.energy=61;
+                            spyOn(Math,"random").and.returnValue(1);
+                            spyOn(view,"find").and.returnValue(" ");
+                            expect(bunny.act(view).type).toEqual("reproduce");
+                        });
+
+                      it("die", function(){
+                        bunny.energy = 56;
+                        spyOn(Math,"random").and.returnValue(0);
+                        expect(bunny.act(view).type).toEqual("die");
+                      });
+                });
+                //addition bottom
     });
