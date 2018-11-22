@@ -40,15 +40,21 @@ print(hmap)
 
 def select(table, dct):
     lst = []
-    for row in table:
-        for item in dct:
-            print(row)
-            print(item)
-            # header_map(row)
-            for obj in row:
-                if obj == item:
-                    lst.append(item)
-    print(lst)
+    for i in table:
+        hmap = header_map(i)
+        for header in dct:
+            print(type(hmap))
+            if table[i][header]:
+                lst.append(table[i][header])
+    # for row in table:
+    #     for item in dct:
+    #         print(row)
+    #         print(item)
+    #         # header_map(row)
+    #         for obj in row:
+    #             if obj == item:
+    #                 lst.append(item)
+    # print(lst)
     return lst
 print("\n\n\n")
 print(select(table,{'name','eye colour'}))
