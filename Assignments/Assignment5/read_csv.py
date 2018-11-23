@@ -22,7 +22,7 @@ def read_csv(filename):
             lst.append(lst_row)
     return list(lst)
 
-#     TESTS
+    # TESTS
 # table = read_csv('test1.csv')
 # print("Table\t", table)
 
@@ -35,11 +35,11 @@ def header_map(row):
         item = item.lstrip()
         lst.append(item)
     for item in lst:
-        dct[item] = colNum
-        colNum = colNum + 1
+    	dct[item] = colNum
+    	colNum = colNum + 1
     return dct
 
-#     TESTS
+    # TESTS
 # hmap = header_map(table[0])
 # print("hmap\t",hmap)
 
@@ -64,10 +64,10 @@ def select(table, dct):
 
 def row2dict(hmap, row):
     """take a header map dict and row, return dict of the row"""
-    dct = dict(zip(hmap.keys(),row))
+    dct = dict(zip(sorted(hmap, key = hmap.__getitem__),row))
     return dct
 
-#     TESTS
+    # TESTS
 # print('row2dict\t',row2dict(hmap, table[1]))
 
 def check_row(row, query):
