@@ -1,8 +1,17 @@
-function res = bucket(v,ranges,p)
-  p=3;
-  x = linspace(ranges(1,1),ranges(2,1),p+1)
-  y = linspace(ranges(1,2),ranges(2,2),p+1)
-  z = linspace(ranges(1,3),ranges(2,3),p+1)  
+function res = bucket(v,rangesA,p)
+  %p=3;
+  v
+  x = linspace(rangesA(1,1),rangesA(2,1),p+1)
+  y = linspace(rangesA(1,2),rangesA(2,2),p+1)
+  %res = repmat(x,p+1,1);
+  dist = (x(end)-x(1))/p
+  m = (x(1:end-1)-v)(1)
+  %a = m(1)
+  n = (y(1:end-1)-v)(1)
+  %b = n(1)
+  %n(1)
+  res = [m,n]
+  %z = linspace(ranges(1,3),ranges(2,3),p+1)  
   
   #iris = csvread("iris.csv");
 
