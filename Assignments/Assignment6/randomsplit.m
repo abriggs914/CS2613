@@ -1,5 +1,6 @@
+#Usage
+#Takes in array and ratio, returning two partioned arrays
 function [foo, bar] = randomsplit(array, ratio)
-  %Takes in array and ratio, returning two partioned arrays%
   %obtain number of rows in array and compute ratio%
   [m,n] = size(array);
   ratioM = m*ratio;

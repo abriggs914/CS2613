@@ -1,5 +1,6 @@
+#Usage 
+#returns an array of minimum and maximum values of given array
 function res = ranges(array)
-  %returns an array of minimum and maximum values of given array%
   res = [min(array);max(array)];
 endfunction
 
