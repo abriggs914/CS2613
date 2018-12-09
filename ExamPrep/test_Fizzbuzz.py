@@ -1,4 +1,4 @@
-from FizzBuzz import FizzBuzz
+from Fizzbuzz import FizzBuzz
 def test_fizzbuzz_next():
     fb=FizzBuzz(15)
     assert (list(fb) == [1,2,'Fizz',4,'Buzz','Fizz',7,8,'Fizz',
