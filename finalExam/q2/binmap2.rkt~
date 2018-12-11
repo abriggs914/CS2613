@@ -1,0 +1,4 @@
+#lang racket
+(define (binmap2 op list1 list2)
+  (define (helper lst1 lst2 acc) #|function body goes here|#)
+  (reverse (helper list1 list2 '())))

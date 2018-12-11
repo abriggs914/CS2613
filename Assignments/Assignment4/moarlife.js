@@ -1,4 +1,4 @@
-let life=require("./life.js");
+let life=require("../life.js");
 
 let View=life.View;
 
